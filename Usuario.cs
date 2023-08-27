@@ -46,6 +46,7 @@ namespace ATM__cajero_automatico_
         public double Get_Saldo()
         {
             return this.Saldo;
+            
         }
         public void Retiro_de_efectivo(double retiro)
         {

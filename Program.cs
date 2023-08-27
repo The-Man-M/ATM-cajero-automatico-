@@ -33,7 +33,7 @@ namespace ATM__cajero_automatico_
                         }
                         xd.Retiro_de_efectivo(retiro);
                         DateTime fechaHoraTransaccion = DateTime.Now;
-                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {retiro}\nSaldo actual: {xd.Get_Saldo}";
+                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {retiro}\nSaldo actual: {xd.Get_Saldo()}";
 
                         Ticket(contenido_del_ticket,ticket_numero);
                         ticket_numero++;
@@ -48,7 +48,7 @@ namespace ATM__cajero_automatico_
                         }
                         xd.Ingreso_de_efectivo(retiro);
                         DateTime fechaHoraTransaccion = DateTime.Now;
-                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {ingreso}\nSaldo actual: {xd.Get_Saldo}";
+                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {ingreso}\nSaldo actual: {xd.Get_Saldo()}";
 
                         Ticket(contenido_del_ticket, ticket_numero);
                         ticket_numero++;
