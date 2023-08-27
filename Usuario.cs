@@ -30,7 +30,7 @@ namespace ATM__cajero_automatico_
                 Console.WriteLine("Ingrese su contraseña\n");
                 this.Contraseña = Console.ReadLine();
                 Console.WriteLine("Ingrese saldo inicial\n");
-                while (!double.TryParse(Console.ReadLine(), out Saldo) || Saldo< 0)//validamos que no ingrese números negativos ni caracter
+                while (!double.TryParse(Console.ReadLine(), out Saldo) || Saldo < 0)//validamos que no ingrese números negativos ni caracter
                 {
                     Console.WriteLine("Ingrese saldo valido\nIngrese saldo inicial\n");
                 }
@@ -39,17 +39,34 @@ namespace ATM__cajero_automatico_
 
             }
         }
+        public bool Get_cuenta_creada()
+        {
+            return this.cuenta_creada;
+        }
         public void Get_Saldo()
         {
-            Console.WriteLine(this.Saldo);
+            Console.WriteLine("Sald0: " + this.Saldo);
         }
-        public void Retiro_de_efectivo()
+        public void Retiro_de_efectivo(double retiro)
         {
-            
+            if (this.Saldo>=retiro)
+            {
+                this.Saldo -= retiro; 
+            }
+            else
+            {
+                Console.WriteLine("No cuenta con el saldo nesesario para hacer tal retiro");
+            }
         }
-        public void Ingreso_de_efectivo()
+        public void Ingreso_de_efectivo(double ingreso)
         {
-            
+            this.Saldo += ingreso;
+        }
+        public void Get_Datos_de_la_cuenta()
+        {
+            Console.WriteLine("Nombre: " + this.Nombre_de_usuario);
+            Console.WriteLine("DUI: " + this.DUI);
+            Console.WriteLine("Saldo: " + this.Saldo);
         }
 
     }
