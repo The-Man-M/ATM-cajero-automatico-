@@ -1,13 +1,18 @@
-﻿namespace ATM__cajero_automatico_
+﻿using System.Net.Sockets;
+
+namespace ATM__cajero_automatico_
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             double retiro = 0, ingreso = 0;
-
+            string contenido_del_ticket = "";
             Usuario xd = new Usuario();
             int Menu = 0;
+            int ticket_numero = 1;
+            
+            Console.WriteLine();
             do
             {
 
@@ -27,7 +32,11 @@
                             Console.WriteLine("Ingrese saldo valido\nIngrese saldo a retirar\n");
                         }
                         xd.Retiro_de_efectivo(retiro);
+                        DateTime fechaHoraTransaccion = DateTime.Now;
+                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {retiro}\nSaldo actual: {xd.Get_Saldo}";
 
+                        Ticket(contenido_del_ticket,ticket_numero);
+                        ticket_numero++;
                     }
                     else if (Menu == 2)
                     {
@@ -37,18 +46,23 @@
                         {
                             Console.WriteLine("Ingrese saldo valido\nIngrese saldo a ingresar\n");
                         }
-                        xd.Retiro_de_efectivo(retiro);
+                        xd.Ingreso_de_efectivo(retiro);
+                        DateTime fechaHoraTransaccion = DateTime.Now;
+                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {ingreso}\nSaldo actual: {xd.Get_Saldo}";
+
+                        Ticket(contenido_del_ticket, ticket_numero);
+                        ticket_numero++;
                     }
                     else if (Menu == 3)
                     {
-                        xd.Get_Saldo();
+                        Console.WriteLine("Saldo: " + xd.Get_Saldo());
                     }
                     else if (Menu == 5)
                     {
                         xd.Get_Datos_de_la_cuenta();
                     }
                 }
-                else if (!xd.Get_cuenta_creada()&& Menu!=6)
+                else if (!xd.Get_cuenta_creada() && Menu != 6)
                 {
                     if (Menu == 4)
                     {
@@ -57,11 +71,12 @@
                     else
                     {
                         Console.WriteLine("Primero debe crear una cuenta");
-                        
+
                     }
                 }
+
                 Console.ReadKey();
-            } while (Menu!=6);
+            } while (Menu != 6);
         }
         static void Rango(double retiro)
         {
@@ -148,5 +163,22 @@
             Console.WriteLine(Billetes_de_uno);
 
         }
+        static void Ticket(string contenido,int i)
+        {
+            string rutaArchivo = $"C:\\Users\\Carlo\\OneDrive\\Documentos\\txt\\archivo_{i}.txt";
+            //string contenido = "caleb puto";
+
+            try
+            {
+                File.WriteAllText(rutaArchivo, contenido);
+                Console.WriteLine("Archivo de texto creado y guardado exitosamente.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al crear y guardar el archivo: {ex.Message}");
+            }
+        }
     }
+    
 }
+

@@ -43,9 +43,9 @@ namespace ATM__cajero_automatico_
         {
             return this.cuenta_creada;
         }
-        public void Get_Saldo()
+        public double Get_Saldo()
         {
-            Console.WriteLine("Sald0: " + this.Saldo);
+            return this.Saldo;
         }
         public void Retiro_de_efectivo(double retiro)
         {
