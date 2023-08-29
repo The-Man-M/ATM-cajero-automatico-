@@ -6,68 +6,75 @@ namespace ATM__cajero_automatico_
     {
         static void Main(string[] args)
         {
-            double retiro = 0, ingreso = 0;
-            string contenido_del_ticket = "";
-            Usuario xd = new Usuario();
+            int retiro = 0, ingreso = 0;
+            Usuario User = new Usuario();
             int Menu = 0;
             int ticket_numero = 1;
-            
-            Console.WriteLine();
+
+            //Un do While para poder volver al menu
             do
             {
-
-                Console.WriteLine("Menu\n1. Retiro de efectivo\n2. Ingreso de efectivo\n3. Consultar saldo\n4. Crear cualta\n5. Datos de la cuenta\n6. Salir");
+                //Menu en pantalla 
+                Console.WriteLine("Menu\n1. Retiro de efectivo\n2. Ingreso de efectivo\n3. Consultar saldo\n4. Crear cuenta\n5. Datos de la cuenta\n6. Salir");
                 while (!int.TryParse(Console.ReadLine(), out Menu) || Menu < 0)//validamos que no ingrese números negativos ni caracter
                 {
-                    Console.WriteLine("Ingrese dato valido\nMenu\n1. Retiro de efectivo\n2. Ingreso de efectivo\n3. Consultar saldo\n 4. Crear cualta\n5. Datos de la cuenta\n6. Salir\n");
+                    Console.WriteLine("Ingrese dato valido\nMenu\n1. Retiro de efectivo\n2. Ingreso de efectivo\n3. Consultar saldo\n 4. Crear cuenta\n5. Datos de la cuenta\n6. Salir\n");
                 }
-                if (xd.Get_cuenta_creada())
+
+                if (User.Get_cuenta_creada()) //validamos que la cuanta ya este creada
                 {
-                    if (Menu == 1)
+                    //menu
+                    if (Menu == 1)//retiro de efectivo
                     {
                         Console.WriteLine("Ingrese saldo a retirar\n");
 
-                        while (!double.TryParse(Console.ReadLine(), out retiro) || retiro < 0)//validamos que no ingrese números negativos ni caracter
+                        while (!int.TryParse(Console.ReadLine(), out retiro) || retiro < 0)//validamos que no ingrese números negativos ni caracter
                         {
                             Console.WriteLine("Ingrese saldo valido\nIngrese saldo a retirar\n");
                         }
-                        xd.Retiro_de_efectivo(retiro);
-                        DateTime fechaHoraTransaccion = DateTime.Now;
-                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {retiro}\nSaldo actual: {xd.Get_Saldo()}";
 
-                        Ticket(contenido_del_ticket,ticket_numero);
-                        ticket_numero++;
+                        //Llamamos a la clase y al método de retiro de efectivo
+                        User.Retiro_de_efectivo(retiro);
+                        Rango_de_retiro(retiro);
+                        
+                        Ticket(ticket_numero, "Retiro", User.Get_Saldo(), retiro); //llamamos a la función para generar un ticket
+                        ticket_numero++;//Sumamos uno para en numero del ticket
+
                     }
-                    else if (Menu == 2)
+                    else if (Menu == 2)//Ingreso de efectivo
                     {
                         Console.WriteLine("Ingrese saldo a ingresar\n");
 
-                        while (!double.TryParse(Console.ReadLine(), out ingreso) || ingreso < 0)//validamos que no ingrese números negativos ni caracter
+                        while (!int.TryParse(Console.ReadLine(), out ingreso) || ingreso < 0)//validamos que no ingrese números negativos ni caracter
                         {
                             Console.WriteLine("Ingrese saldo valido\nIngrese saldo a ingresar\n");
                         }
+                       
+                        //Llamamos a la clase y al método de ingreso de efectivo 
+                        User.Ingreso_de_efectivo(ingreso);
+                        
 
-                        Ticket(contenido_del_ticket, ticket_numero);
-                        ticket_numero++;
+                        Ticket(ticket_numero,"Ingreso de efectivo",User.Get_Saldo(),ingreso); //llamamos a la función para generar un ticket
+                        ticket_numero++; //Sumamos uno para en numero del ticket
                     }
-                    else if (Menu == 3)
+                    else if (Menu == 3) //Mostrar saldo
                     {
-                        Console.WriteLine("Saldo: " + xd.Get_Saldo());
+                        Console.WriteLine("Saldo: " + User.Get_Saldo()); //Lamamos a la clase y método para mostrar el saldo actual
                     }
-                    else if (Menu == 5)
+                    else if (Menu == 5)//Crear cuenta
                     {
-                        xd.Get_Datos_de_la_cuenta();
+                        User.Get_Datos_de_la_cuenta();//Lamamos a la clase y método para crear la cuenta
                     }
                 }
-                else if (!xd.Get_cuenta_creada() && Menu != 6)
+                else if (!User.Get_cuenta_creada() && Menu != 6)// si la cuenta no esta creada y no eligió 6 en el meno 
                 {
                     if (Menu == 4)
                     {
-                        xd.Crear_cuenta();
+                        User.Crear_cuenta(); //Lamamos a la clase y método para crear la cuenta
                     }
                     else
                     {
-                        Console.WriteLine("Primero debe crear una cuenta");
+                        Console.WriteLine("Primero debe crear una cuenta"); //por si eligió otra opción que no sea la de crear cuenta o salir
 
                     }
                 }
@@ -75,99 +82,127 @@ namespace ATM__cajero_automatico_
                 Console.ReadKey();
             } while (Menu != 6);
         }
-        static void Rango(double retiro)
+        static void Rango_de_retiro(double retiro)
         {
+            //Rango para ver cuando billetes de cada denominación se tiene que dar 
             if (retiro > 0 && retiro <= 15)
             {
-                Billetes_1(retiro);
+                Billetes_0_a_15(retiro);
             }
             else if (retiro > 15 && retiro <= 50)
             {
-                Billetes_2(retiro);
+                Billetes_15_a_50(retiro);
 
             }
             else if (retiro > 50 && retiro <= 100)
             {
-                Billetes_3(retiro);
+                Billetes_50_a_100(retiro);
 
             }
             else if (retiro > 100)
             {
-                billetes_4(retiro);
+                billetes_100_en_adelante(retiro);
             }
-            else { }
+            else { Console.WriteLine("Fuera de rango"); }
         }
-        static void Billetes_1(double retiro)
+        //Función para calcular cuantos billetes se tienen que dar para la cantidad de retiro entre $ 15 a $ 50
+        static void Billetes_0_a_15(double retiro)
         {
-            int Billetes_de_uno = 0;
-            int Billetes_de_cinco = 0;
-
-            Billetes_de_cinco = Convert.ToInt16(((double)Math.Round(retiro * 0.50)) / 5);
-            Billetes_de_uno = Convert.ToInt16((double)(retiro)) - (Billetes_de_cinco * 5);
-
-            Console.WriteLine(Billetes_de_cinco);
-            Console.WriteLine(Billetes_de_uno);
-        }
-        static void Billetes_2(double retiro)
-        {
+            //Declaramos variables 
             int Billetes_de_uno = 0;
             int Billetes_de_cinco = 0;
             int Billetes_de_diez = 0;
+            int Billetes_de_veinte = 0;
+            const double Porcentaje_B_5 = 0.50; 
 
-            Billetes_de_diez = Convert.ToInt16(((double)Math.Round(retiro * 0.75)) / 10);
-            Billetes_de_cinco = Convert.ToInt16((((double)Math.Round((retiro - Billetes_de_diez * 10) * 0.5)) / 5));
-            Billetes_de_uno = Convert.ToInt16((double)(retiro) - ((Billetes_de_cinco * 5) + (Billetes_de_diez * 10)));
+            Billetes_de_cinco = Convert.ToInt16(((double)Math.Round(retiro * Porcentaje_B_5)) / 5); //Multiplicamos la variable retiro * Porcentaje_B_5 y lo dividimos entre 5 y nos da la cantidad de billetes de a cinco
 
+            Billetes_de_uno = Convert.ToInt16((double)(retiro)) - (Billetes_de_cinco * 5);// convertimos la variable retiro en int y le restamos (billetes_a_cinco * 5) y nos da la cantidad de billetes de a uno
 
-            Console.WriteLine(Billetes_de_diez);
-            Console.WriteLine(Billetes_de_cinco);
-            Console.WriteLine(Billetes_de_uno);
+            //Mostramos en pantalla 
+            Mostrar_billetes(Billetes_de_veinte, Billetes_de_diez, Billetes_de_cinco, Billetes_de_uno);
         }
-        static void Billetes_3(double retiro)
+        //Función para calcular cuantos billetes se tienen que dar para la cantidad de retiro entre $ 15 a $ 50
+        static void Billetes_15_a_50(double retiro)
+        {
+            //Declaramos variable
+            int Billetes_de_uno = 0;
+            int Billetes_de_cinco = 0;
+            int Billetes_de_diez = 0;
+            int Billetes_de_veinte = 0;
+            const double porcentaje_10 = 0.75, Porcentaje_B_5 = 0.50;
+
+            //Calculamos los billetes a dar
+
+            Billetes_de_diez = Convert.ToInt16(((double)Math.Round(retiro * porcentaje_10)) / 10); // Multiplicamos la variable retiro* Porcentaje_B_10 y lo dividimos entre 10 y nos da la cantidad de billetes de a diez
+
+            Billetes_de_cinco = Convert.ToInt16((((double)Math.Round((retiro - Billetes_de_diez * 10) * Porcentaje_B_5)) / 5));//Restamos la variable retiro - (Billetes_de_a_diez * 10) y al resultado lo multiplicamos por Porcentaje_B_5 y lo dividimos entre 5 y nos da la cantidad de billetes de a cinco
+
+            Billetes_de_uno = Convert.ToInt16((double)(retiro) - ((Billetes_de_cinco * 5) + (Billetes_de_diez * 10)));//Convertimos la variable tipo double a tipo int luego restamos billetes_de_10 multiplicado por 10 mas billetes_de_5 multiplicado por 5 a la variable retiro y eso da la cantidad de billetes de a 1 
+
+
+            Mostrar_billetes(Billetes_de_veinte, Billetes_de_diez, Billetes_de_cinco, Billetes_de_uno);
+        }
+        //Función para calcular cuantos billetes se tienen que dar para la cantidad de retiro entre $ 15 a $ 50
+        static void Billetes_50_a_100(double retiro)
         {
             int Billetes_de_uno = 0;
             int Billetes_de_cinco = 0;
             int Billetes_de_diez = 0;
             int Billetes_de_veinte = 0;
+            const double  Porcentaje_B_20 = 0.50, Porcentaje_B_10 = 0.75 ,Porcentaje_B_5 = 0.50;
 
-            Billetes_de_veinte = Convert.ToInt16(((double)Math.Round(retiro * 0.5)) / 20);
-            Billetes_de_diez = Convert.ToInt16(((double)Math.Round((retiro - Billetes_de_veinte * 20) * 0.75)) / 10);
-            Billetes_de_cinco = Convert.ToInt16((((double)Math.Round((retiro - ((Billetes_de_veinte * 20) + (Billetes_de_diez * 10)) * 0.55)) / 5)));
-            Billetes_de_uno = Convert.ToInt16((double)(retiro) - (((Billetes_de_veinte * 20) + (Billetes_de_diez * 10) + (Billetes_de_cinco * 5))));
+            
+            Billetes_de_veinte = Convert.ToInt16(((double)Math.Round(retiro * Porcentaje_B_20)) / 20);//Multiplicamos la variable retiro* Porcentaje_B_20 y lo dividimos entre 20 y nos da la cantidad de billetes de a veinte
 
+            Billetes_de_diez = Convert.ToInt16(((double)Math.Round((retiro - Billetes_de_veinte * 20) * Porcentaje_B_10)) / 10);//Restamos la variable retiro - (Billetes_de_a_veinte * 20) y al resultado lo multiplicamos por Porcentaje_B_10 y lo dividimos entre 10 y nos da la cantidad de billetes de a diez
 
-            Console.WriteLine(Billetes_de_veinte);
-            Console.WriteLine(Billetes_de_diez);
-            Console.WriteLine(Billetes_de_cinco);
-            Console.WriteLine(Billetes_de_uno);
+            Billetes_de_cinco = Convert.ToInt16((((double)Math.Round((retiro - ((Billetes_de_veinte * 20) + (Billetes_de_diez * 10)) * 0.55)) / Porcentaje_B_5)));//Restamos la variable retiro - ((Billetes_de_a_veinte * 20) + (Billetes_de_a_diez * 10) ) y al resultado lo multiplicamos por Porcentaje_B_5 y lo dividimos entre 5 y nos da la cantidad de billetes de a cinco
+
+            Billetes_de_uno = Convert.ToInt16((double)(retiro) - (((Billetes_de_veinte * 20) + (Billetes_de_diez * 10) + (Billetes_de_cinco * 5))));//Convertimos la variable tipo double a tipo int luego le restamos a la variable retiro -((Billetes_de_veinte * 20) + (Billetes_de_diez * 10 ) + (Billetes_de_5 * 5)) y eso da la cantidad de billetes de a 1 
+
+            //Mostramos en pantalla
+            Mostrar_billetes(Billetes_de_veinte, Billetes_de_diez, Billetes_de_cinco, Billetes_de_uno);
         }
-        static void billetes_4(double retiro)
+        //Función para calcular cuantos billetes se tienen que dar para la cantidad de retiro entre $ 15 a $ 50
+        static void billetes_100_en_adelante(double retiro)
         {
+
             int Billetes_de_uno = 0;
             int Billetes_de_cinco = 0;
             int Billetes_de_diez = 0;
             int Billetes_de_veinte = 0;
+            const double Porcentaje_B_20 = 0.50, Porcentaje_B_10 = 0.40, Porcentaje_B_5 = 0.10;
 
-            Billetes_de_veinte = Convert.ToInt16(((double)Math.Round(retiro * 0.5)) / 20);
-            Billetes_de_diez = Convert.ToInt16(((double)Math.Round(retiro * 0.40)) / 10);
-            Billetes_de_cinco = Convert.ToInt16((((double)Math.Round((retiro * 0.1)) / 5)));
-            Billetes_de_uno = Convert.ToInt16((double)(retiro) - (((Billetes_de_veinte * 20) + (Billetes_de_diez * 10) + (Billetes_de_cinco * 5))));
+            Billetes_de_veinte = Convert.ToInt16(((double)Math.Round(retiro * Porcentaje_B_20)) / 20);//Multiplicamos la variable retiro * Porcentaje_B_20 y lo dividimos entre 20 y nos da la cantidad de billetes de a veinte
+            Billetes_de_diez = Convert.ToInt16(((double)Math.Round(retiro * Porcentaje_B_10)) / 10);//Multiplicamos la variable retiro* Porcentaje_B_10 y lo dividimos entre 10 y nos da la cantidad de billetes de a diez
+            Billetes_de_cinco = Convert.ToInt16((((double)Math.Round((retiro * Porcentaje_B_5)) / 5)));//Multiplicamos la variable retiro* Porcentaje_B_5 y lo dividimos entre 5 y nos da la cantidad de billetes de a cinco
+            Billetes_de_uno = Convert.ToInt16((double)(retiro) - (((Billetes_de_veinte * 20) + (Billetes_de_diez * 10) + (Billetes_de_cinco * 5))));//Convertimos la variable tipo double a tipo int luego le restamos a la variable retiro -((Billetes_de_veinte * 20) + (Billetes_de_diez * 10 ) + (Billetes_de_5 * 5)) y eso da la cantidad de billetes de a 1 
 
-
-            Console.WriteLine(Billetes_de_veinte);
-            Console.WriteLine(Billetes_de_diez);
-            Console.WriteLine(Billetes_de_cinco);
-            Console.WriteLine(Billetes_de_uno);
+            //Mostramos en pantalla
+            Mostrar_billetes(Billetes_de_veinte,Billetes_de_diez,Billetes_de_cinco,Billetes_de_uno);
 
         }
-        static void Ticket(string contenido,int i)
+        //Mostramos la cantidad de billetes a dar
+        static void Mostrar_billetes(int Billetes_de_uno, int Billetes_de_cinco,  int Billetes_de_diez, int Billetes_de_veinte)
         {
-            string rutaArchivo = $"C:\\Users\\Carlo\\OneDrive\\Documentos\\txt\\archivo_{i}.txt";
-            //string contenido = "caleb puto";
+            //Mostramos en pantalla
+            Console.WriteLine("Billetes de a veinte: $ " + Billetes_de_veinte);
+            Console.WriteLine("Billetes de a diez: $ " + Billetes_de_diez);
+            Console.WriteLine("Billetes de a cinco: $ " + Billetes_de_cinco);
+            Console.WriteLine("Billetes de a uno: $ " + Billetes_de_uno);
+        }
+        //Funcion para imprimir el ticket
+        static void Ticket(int i,string Transacción,double Saldo, int Monto)
+        {
+            DateTime fecha_Hora_Transacción = DateTime.Now; 
+
+            string rutaArchivo = $"C:\\Users\\Carlo\\OneDrive\\Documentos\\txt\\archivo_{i}.txt"; //ruta a la cual se guardara el txt
+            string Contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fecha_Hora_Transacción}\n{Transacción}: {Monto}\nSaldo actual: {Saldo}";
 
             try
             {
-                File.WriteAllText(rutaArchivo, contenido);
+                File.WriteAllText(rutaArchivo, Contenido_del_ticket);
                 Console.WriteLine("Archivo de texto creado y guardado exitosamente.");
             }
             catch (Exception ex)
