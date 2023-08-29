@@ -6,6 +6,7 @@ namespace ATM__cajero_automatico_
     {
         static void Main(string[] args)
         {
+            //Declaramos variables
             int retiro = 0, ingreso = 0;
             Usuario User = new Usuario();
             int Menu = 0;
