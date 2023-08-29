@@ -46,9 +46,6 @@ namespace ATM__cajero_automatico_
                         {
                             Console.WriteLine("Ingrese saldo valido\nIngrese saldo a ingresar\n");
                         }
-                        xd.Ingreso_de_efectivo(retiro);
-                        DateTime fechaHoraTransaccion = DateTime.Now;
-                        contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fechaHoraTransaccion}\nRetiro: {ingreso}\nSaldo actual: {xd.Get_Saldo()}";
 
                         Ticket(contenido_del_ticket, ticket_numero);
                         ticket_numero++;
