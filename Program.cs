@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using System;
+using System.Net.Sockets;
 
 namespace ATM__cajero_automatico_
 {
@@ -40,6 +41,7 @@ namespace ATM__cajero_automatico_
                         
                         Ticket(ticket_numero, "Retiro", User.Get_Saldo(), retiro); //llamamos a la función para generar un ticket
                         ticket_numero++;//Sumamos uno para en numero del ticket
+                        
 
                     }
                     else if (Menu == 2)//Ingreso de efectivo
@@ -62,6 +64,11 @@ namespace ATM__cajero_automatico_
                     {
                         Console.WriteLine("Saldo: " + User.Get_Saldo()); //Lamamos a la clase y método para mostrar el saldo actual
                     }
+                    else if (Menu == 4)
+                    {
+                        Console.WriteLine("Cuenta creada"); 
+
+                    }
                     else if (Menu == 5)//Crear cuenta
                     {
                         User.Get_Datos_de_la_cuenta();//Lamamos a la clase y método para crear la cuenta
@@ -79,8 +86,10 @@ namespace ATM__cajero_automatico_
 
                     }
                 }
+                
 
                 Console.ReadKey();
+                Console.Clear();
             } while (Menu != 6);
         }
         static void Rango_de_retiro(double retiro)
@@ -193,18 +202,21 @@ namespace ATM__cajero_automatico_
             Console.WriteLine("Billetes de a cinco: $ " + Billetes_de_cinco);
             Console.WriteLine("Billetes de a uno: $ " + Billetes_de_uno);
         }
-        //Funcion para imprimir el ticket
-        static void Ticket(int i,string Transacción,double Saldo, int Monto)
+        //Función para imprimir el ticket
+        
+        static void Ticket(int i, string Transacción, double Saldo, int Monto)
         {
-            DateTime fecha_Hora_Transacción = DateTime.Now; 
+            string contenido = "$\"Ticket\\nFecha Hora Transacción: {fecha_Hora_Transacción}\\n{Transacción}: {Monto}\\nSaldo actual: {Saldo}\"";
 
-            string rutaArchivo = $"C:\\Users\\Carlo\\OneDrive\\Documentos\\txt\\archivo_{i}.txt"; //ruta a la cual se guardara el txt
-            string Contenido_del_ticket = $"Ticket\nFecha Hora Transacción: {fecha_Hora_Transacción}\n{Transacción}: {Monto}\nSaldo actual: {Saldo}";
+            string nombreArchivo = $"archivo_{i}.txt";
+            string rutaDirectorio = AppDomain.CurrentDomain.BaseDirectory;
+
+            string rutaArchivo = Path.Combine(rutaDirectorio, nombreArchivo);
 
             try
             {
-                File.WriteAllText(rutaArchivo, Contenido_del_ticket);
-                Console.WriteLine("Archivo de texto creado y guardado exitosamente.");
+                File.WriteAllText(rutaArchivo, contenido);
+                Console.WriteLine($"Archivo de texto creado y guardado en: {rutaArchivo}");
             }
             catch (Exception ex)
             {
