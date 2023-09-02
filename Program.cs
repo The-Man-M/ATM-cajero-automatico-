@@ -66,7 +66,7 @@ namespace ATM__cajero_automatico_
                     }
                     else if (Menu == 4)
                     {
-                        Console.WriteLine("Cuenta creada"); 
+                        Console.WriteLine("Cuenta ya fue creada"); 
 
                     }
                     else if (Menu == 5)//Crear cuenta
